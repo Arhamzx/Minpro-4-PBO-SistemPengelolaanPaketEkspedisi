@@ -1,11 +1,3 @@
--- ==========================================================
---  MINPRO 4 - SISTEM MANAJEMEN PAKET EKSPEDISI
---  Database : minpro4_paket
---  Cara pakai: import file ini lewat phpMyAdmin (tab Import)
---  atau jalankan:  mysql -u root -p < minpro4_paket.sql
---  Script aman dijalankan berulang kali (tabel dibuat ulang).
--- ==========================================================
-
 CREATE DATABASE IF NOT EXISTS minpro4_paket
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_general_ci;
@@ -17,10 +9,6 @@ DROP TABLE IF EXISTS penerima;
 DROP TABLE IF EXISTS kurir;
 DROP TABLE IF EXISTS ekspedisi;
 
--- ----------------------------------------------------------
---  Tabel ekspedisi  <->  class Ekspedisi (JNE, JNT, SiCepat)
---  Satu baris = satu kombinasi ekspedisi + jenis layanan.
--- ----------------------------------------------------------
 CREATE TABLE ekspedisi (
     id_ekspedisi   INT          NOT NULL AUTO_INCREMENT,
     nama_ekspedisi VARCHAR(30)  NOT NULL,
@@ -29,9 +17,6 @@ CREATE TABLE ekspedisi (
     UNIQUE KEY uq_ekspedisi_layanan (nama_ekspedisi, jenis_layanan)
 ) ENGINE=InnoDB;
 
--- ----------------------------------------------------------
---  Tabel penerima  <->  class Penerima (turunan Person)
--- ----------------------------------------------------------
 CREATE TABLE penerima (
     id_penerima INT          NOT NULL AUTO_INCREMENT,
     nama        VARCHAR(100) NOT NULL,
@@ -41,9 +26,6 @@ CREATE TABLE penerima (
     PRIMARY KEY (id_penerima)
 ) ENGINE=InnoDB;
 
--- ----------------------------------------------------------
---  Tabel kurir  <->  class Kurir (turunan Person)
--- ----------------------------------------------------------
 CREATE TABLE kurir (
     id_kurir        INT          NOT NULL AUTO_INCREMENT,
     nama            VARCHAR(100) NOT NULL,
@@ -52,9 +34,6 @@ CREATE TABLE kurir (
     PRIMARY KEY (id_kurir)
 ) ENGINE=InnoDB;
 
--- ----------------------------------------------------------
---  Tabel paket  <->  class Paket
--- ----------------------------------------------------------
 CREATE TABLE paket (
     id_paket       INT           NOT NULL AUTO_INCREMENT,
     no_resi        VARCHAR(30)   NOT NULL,
@@ -72,11 +51,6 @@ CREATE TABLE paket (
     CONSTRAINT fk_paket_kurir     FOREIGN KEY (id_kurir)     REFERENCES kurir (id_kurir)
 ) ENGINE=InnoDB;
 
--- ==========================================================
---  DATA AWAL (DUMMY)
--- ==========================================================
-
--- Daftar ekspedisi + layanan (sama dengan pilihan di menu program)
 INSERT INTO ekspedisi (nama_ekspedisi, jenis_layanan) VALUES
     ('J&T',     'Cargo'),
     ('J&T',     'Reguler'),
@@ -96,8 +70,6 @@ INSERT INTO kurir (nama, nomor_hp, jenis_kendaraan) VALUES
     ('Budi', '08129876543', 'Motor'),
     ('Andi', '08134567890', 'Mobil');
 
--- Paket 1 : JNE REG, 1 kg   (data dari Minpro 3)
--- Paket 2 : J&T Reguler, 2.5 kg
 INSERT INTO paket
     (no_resi, nama_pengirim, tanggal_masuk, status, berat_kg, id_ekspedisi, id_penerima, id_kurir)
 VALUES
